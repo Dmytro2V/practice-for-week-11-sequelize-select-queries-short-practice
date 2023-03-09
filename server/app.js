@@ -22,6 +22,7 @@ app.get('/puppies', async (req, res, next) => {
     let allPuppies;
 
     // Your code here
+    allPuppies = await Puppy.findAll({order:["name"]})
 
     res.json(allPuppies);
 });
@@ -34,7 +35,13 @@ app.get('/puppies/chipped', async (req, res, next) => {
     let chippedPuppies;
 
     // Your code here
-
+    chippedPuppies = await Puppy.findAll(
+        {
+            where: {
+                microchipped: true
+            },
+            order:[["age_yrs", 'DESC']]
+        })
     res.json(chippedPuppies);
 });
 
@@ -46,9 +53,17 @@ app.get('/puppies/name/:name', async (req, res, next) => {
     let puppyByName;
     
     // Your code here
+  
+    puppyByName = await Puppy.findOne(
+        { 
+            where: { 
+                name: req.params.name
+            }
+        }
+    )
 
     res.json(puppyByName);
-})
+});
 
 
 // BONUS STEP 5
@@ -58,9 +73,17 @@ app.get('/puppies/shepherds', async (req, res, next) => {
     let shepherds;
     
     // Your code here
+    shepherds = await Puppy.findAll(
+        {
+            where: {
+                breed: {[Op.endsWith]: 'Shepherd'}
+            },
+            order:[["name", 'DESC']]
+        }
+    )
 
     res.json(shepherds);
-})
+});
 
 
 // BONUS STEP 6
@@ -70,6 +93,15 @@ app.get('/puppies/tinybabies', async (req, res, next) => {
     let tinyBabyPuppies;
     
     // Your code here
+    tinyBabyPuppies = await Puppy.findAll(
+        {
+            where: {
+                age_yrs: {[Op.lt]: 1},
+                weight_lbs: {[Op.lt]: 20}
+            },
+            order:[["age_yrs"]]
+        }
+    )
 
     res.json(tinyBabyPuppies);
 })
@@ -81,8 +113,8 @@ app.get('/puppies/tinybabies', async (req, res, next) => {
 app.get('/puppies/:id', async (req, res, next) => {
     let puppyById;
     
-    // Your code here
-    
+    // Your code here  
+    puppyById = await Puppy.findByPk(req.params.id);
     res.json(puppyById);
 });
 
